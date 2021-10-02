@@ -8,37 +8,47 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { Public } from 'src/common/decorators/public.decorator';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { ParseIntPipe } from 'src/common/pipe/parse-int.pipe';
 import { CoffeesService } from './coffees.service';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
-import { CoffeeEntity } from './entities/coffee.entity';
+import { Coffee } from './entities/coffee.entity';
 
 @Controller('coffees')
 export class CoffeesController {
   constructor(private readonly coffeeService: CoffeesService) {}
+
+  @Public()
   @Get()
-  findAll(): CoffeeEntity[] {
-    return this.coffeeService.findAll();
+  async findAll(
+    @Query() paginationQuery: PaginationQueryDto,
+  ): Promise<Coffee[]> {
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    return await this.coffeeService.findAll(paginationQuery);
   }
 
   @Get(':id')
-  findById(@Param('id') id: number): CoffeeEntity {
-    return this.coffeeService.findOneById(id);
+  async findById(@Param('id', ParseIntPipe) id: number): Promise<Coffee> {
+    return await this.coffeeService.findOneById(+id);
   }
 
   @Post()
-  create(@Body() createCoffeeDto: CreateCoffeeDto) {
-    console.log(createCoffeeDto instanceof CreateCoffeeDto);
-    return this.coffeeService.create(createCoffeeDto);
+  async create(@Body() createCoffeeDto: CreateCoffeeDto): Promise<Coffee> {
+    return await this.coffeeService.create(createCoffeeDto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateCoffeeDto: UpdateCoffeeDto) {
-    this.coffeeService.update(id, updateCoffeeDto);
+  async update(
+    @Param('id') id: number,
+    @Body() updateCoffeeDto: UpdateCoffeeDto,
+  ): Promise<Coffee> {
+    return await this.coffeeService.update(id, updateCoffeeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    this.coffeeService.remove(id);
+  async remove(@Param('id') id: number): Promise<void> {
+    await this.coffeeService.remove(id);
   }
 }

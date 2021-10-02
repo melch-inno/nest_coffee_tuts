@@ -1,5 +1,4 @@
 import { IsString, IsNumber } from 'class-validator';
-
 export class CreateCoffeeDto {
   @IsString()
   readonly name: string;
@@ -11,7 +10,7 @@ export class CreateCoffeeDto {
   readonly brand: string;
 
   @IsString({ each: true })
-  readonly flavour: string[];
+  readonly flavours: string[];
 
   @IsNumber()
   readonly rating: number;
