@@ -8,4 +8,4 @@ services:
       - '5433:5433'
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=ikoba777&
+      - POSTGRES_PASSWORD=password
